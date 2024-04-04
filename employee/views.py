@@ -84,7 +84,6 @@ def profile(request):
         ln = request.POST['lastname']
         empcode=request.POST['empcode']
         email = request.POST['email']
-        # department = request.POST['department']
         designation=request.POST['designation']
         joiningdate=request.POST['joiningdate']
         gender =request.POST['gender']
@@ -93,9 +92,9 @@ def profile(request):
         employee.user.first_name= fn
         employee.user.last_name=ln
         employee.empcode=empcode
-        # employee.department = department
+        
         employee.designation=designation
-        employee.department=department
+        employee.joiningdate=joiningdate
         employee.gender=gender
         employee.contact=contact
 
