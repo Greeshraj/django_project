@@ -8,8 +8,9 @@ def index(request):
     users = User.objects.all()
     user_details_with_attendance = []
     for user in users:
+        user_attendance = Attendance.objects.filter(user=request.user).exclude(date__isnull=True)
+        user_attendance = user_attendance.exclude(date=None)
         user_info = {'name': user.get_full_name(), 'email': user.email}
-        user_attendance = Attendance.objects.filter(user=user)
         user_details_with_attendance.append({'user_info': user_info, 'attendance': user_attendance})
     return render(request, 'index.html', {'user_details_with_attendance': user_details_with_attendance})
 
@@ -20,10 +21,11 @@ def registration(request):
         ln = request.POST['lastname']
         empcode=request.POST['empcode']
         email = request.POST['email']
+        joiningdate=request.POST['joiningdate']
         pwd = request.POST['password']
         try:
             user = User.objects.create_user(first_name=fn,last_name=ln,username=email,email=email,password=pwd)
-            EmployeeDetail.objects.create(user= user,empcode=empcode)
+            EmployeeDetail.objects.create(user= user,empcode=empcode,joiningdate=joiningdate)
             Attendance.objects.create(user=user)
             error="no"
         except:
@@ -93,7 +95,7 @@ def profile(request):
         employee.empcode=empcode
         # employee.department = department
         employee.designation=designation
-        employee.joiningdate=joiningdate
+        employee.department=department
         employee.gender=gender
         employee.contact=contact
 
