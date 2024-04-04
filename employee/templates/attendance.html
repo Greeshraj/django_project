@@ -1,0 +1,95 @@
+{% extends 'emp_base.html'%}
+
+{% block main%}
+<h4 class="text-danger p-2" style="border-bottom: 2px solid red">Employee Dashboard</h4>
+<div class="row text-center">
+    <div class="col-sm-12 p-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="text-success">Welcome to Attendance Page</h4>
+                <h5>{{ request.user.first_name }} {{ request.user.last_name }}</h5>
+                <p>Current Date: <span id="currentDate"></span></p>
+                <p>Current Time: <span id="currentTime"></span></p>
+                <form id="attendanceForm" method="post" name="attendance">
+                    {% csrf_token %}
+                    <input type="hidden" name="cdate" id="cdate" style="display: none;" >
+                    <input type="hidden" name="ctime" id="ctime" style="display: none;" >
+                    
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if error == "no" %}
+<script>
+    alert('Marked Your Attendance Succesfully');
+</script>
+{% endif %}
+{% if error == "already" %}
+<script>
+    alert('You have already marked your today attendance.');
+    window.location='{% url 'emp_home' %}';
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert('Something went wrong. Please try again.');
+</script>
+{% endif %}
+
+<script>
+    // Function to get current date
+    function getCurrentDate() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        var day = now.getDate();
+        // Formatting the date to display
+        var formattedDate = year + '-' + pad(month) + '-' + pad(day);
+        return formattedDate;
+    }
+
+    // Function to get current time
+    function getCurrentTime() {
+        var now = new Date();
+        var hour = now.getHours();
+        var minute = now.getMinutes();
+        var second = now.getSeconds();
+        // Formatting the time to display
+        var formattedTime = pad(hour) + ":" + pad(minute) + ":" + pad(second);
+        return formattedTime;
+    }
+
+    // Function to pad single digit numbers with leading zero
+    function pad(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+
+    // Function to update the content of the specified HTML element with the current date
+    function updateCurrentDate() {
+        var currentDate = getCurrentDate();
+        document.getElementById('currentDate').textContent = currentDate;
+        document.getElementById('cdate').value = currentDate;
+    }
+
+    // Function to update the content of the specified HTML element with the current time
+    function updateCurrentTime() {
+        var currentTime = getCurrentTime();
+        document.getElementById('currentTime').textContent = currentTime;
+        document.getElementById('ctime').value = currentTime;
+    }
+
+    // Call the date and time update functions initially and then every second to keep them updated
+    updateCurrentDate();
+    updateCurrentTime();
+    setInterval(updateCurrentDate, 1000);
+    setInterval(updateCurrentTime, 1000);
+</script>
+
+{% endblock %}

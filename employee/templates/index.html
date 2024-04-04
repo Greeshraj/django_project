@@ -6,46 +6,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Employee Record Management System</title>
-    <style>
-        
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 90%;
-            text-align: center;
-            
-        }
-        h1 {
-            color: #007bff;
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2em;
-            color: #6c757d;
-            margin-bottom: 30px;
-        }
-        .btn {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+      
+
+<style>
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+    h1 {
+        color: #007bff;
+        font-size: 3em;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.2em;
+        color: #6c757d;
+        margin-bottom: 30px;
+    }
+
+    .btn {
+        display: inline-block;
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .user-details {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        width: 80%;
+        max-width: 600px;
+    }
+
+    .user-details h2 {
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .user-details p {
+        margin-bottom: 10px;
+        color: #6c757d;
+    }
+
+    .user-details h3 {
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .attendance-record {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .attendance-record li {
+        margin-bottom: 5px;
+    }
+    .toggle-button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    .toggle-button:hover {
+        background-color: #0056b3;
+    }
+
+    .employee-details {
+        display: none;
+    }
+</style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to Employee Record Management System</h1>
         <p>This is the home page of your website. Start exploring!</p>
-        
         <a href="#" class="btn">Get Started</a>
+
+        <a href="#" class="toggle-button" onclick="toggleEmployeeDetails()">Show All Employee Details</a>
+
+        <div class="employee-details">
+            {% for user_data in user_details_with_attendance %}
+                <div class="user-details">
+                    <h2>{{ user_data.user_info.name }}</h2>
+                    <p>Email: {{ user_data.user_info.email }}</p>
+                    <h3>Attendance Records:</h3>
+                    <ul class="attendance-record">
+                        {% for attendance in user_data.attendance %}
+                            <li>Date: {{ attendance.date }} | Time In: {{ attendance.time_in }} | Time Out: {{ attendance.time_out }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <script>
+        function toggleEmployeeDetails() {
+            var employeeDetails = document.querySelector('.employee-details');
+            var button = document.querySelector('.toggle-button');
+            if (employeeDetails.style.display === 'none') {
+                employeeDetails.style.display = 'block';
+                button.textContent = 'Hide All Employee Details';
+            } else {
+                employeeDetails.style.display = 'none';
+                button.textContent = 'Show All Employee Details';
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+

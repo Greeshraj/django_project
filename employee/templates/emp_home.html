@@ -1,18 +1,68 @@
-{% extends 'emp_base.html'%}
+{% extends 'emp_base.html' %}
 
- {% block main%}
- <h4 class="text-danger p-2" style="border-bottom : 2px solid red"> Employee Dashboard </h4>
- <div class="row text-center">
-    <div class="col-sm-12 p-2">
+{% block main %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h4 class="text-danger p-2" style="border-bottom: 2px solid red">Employee Dashboard</h4>
+<div class="row text-center">
+    <div class="col-sm-6 p-2">
         <div class="card shadow">
             <div class="card-body">
-                <h4 class="text-success"> Welcome to ERMS</h4>
-                <h5> {{request.user.first_name}} {{request.user.last_name}}</h5>
-            </div>    
+                <h4 class="text-success">Welcome to ERMS</h4>
+                <h5>{{ request.user.first_name }} {{ request.user.last_name }}</h5>
+                <canvas id="attendanceChart"></canvas>
+            </div>
         </div>
-    </div>     
+    </div>
+    <div class="col-sm-6 p-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5>Attendance Records</h5>
+                <ul>
+                    {% for attendance_record in user_attendance %}
+                        <li>Date: {{ attendance_record.date }} - Time In: {{ attendance_record.time_in }} - Time Out: {{ attendance_record.time_out }}</li>
+                    {% endfor %}
+                </ul>
+                {% for user_detail in user_details %}
+                    <h5>Joining Date: {{ user_detail.joiningdate }}</h5>
+                {% endfor %}
+                {% for attendance_stat in attendance_stats %}
+                    <h5>Your Attendance Count: {{ attendance_stat.total_attendance }}</h5>
+                    <h5>Total Days Since Joining: {{ attendance_stat.total_days }}</h5>
+                    <script>
+                        var ctx = document.getElementById('attendanceChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Present', 'Absent'],
+                                datasets: [{
+                                    label: 'Attendance',
+                                    data: [{{ attendance_stat.total_attendance  }}, {{ attendance_stat.total_absent }}],
+                                    backgroundColor: [
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 99, 132, 0.2)',
+                                    ],
+                                    borderColor: [
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 99, 132, 1)',
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        stepSize: 1, // Force the y-axis to display integer values only
+                                        precision: 0 // Prevent decimals in y-axis labels
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 
- </div>
-  
-
- {% endblock %}
+{% endblock %}
